@@ -38,7 +38,24 @@
                                 <h4 class="title is-6">Ingredients</h4>
                                 <ul class="recipe-ingredients">
                                     {{ range $step.ingredients }}
+                                    {{ $isMap := reflect.IsMap . }}
+                                    {{ if and $isMap (isset . "amount") }}
+                                    {{ $unit := .unit | default "" }}
+                                    {{ $unitPlural := .unit_plural | default "" }}
+                                    {{ $item := .item | default "" }}
+                                    {{ $note := .note | default "" }}
+                                    {{ $scalable := true }}
+                                    {{ if isset . "scalable" }}
+                                    {{ $scalable = .scalable }}
+                                    {{ end }}
+                                    <li class="recipe-ingredient" data-scalable="{{ $scalable }}">
+                                        <span class="recipe-ingredient-amount" data-base-amount="{{ .amount }}" data-base-unit="{{ $unit }}" data-base-unit-plural="{{ $unitPlural }}">{{ .amount }}{{ if $unit }} {{ $unit }}{{ end }}</span>{{ if $item }} <span class="recipe-ingredient-name">{{ $item }}</span>{{ end }}{{ if $note }}<span class="recipe-ingredient-note">, {{ $note }}</span>{{ end }}
+                                    </li>
+                                    {{ else if and $isMap (isset . "item") }}
+                                    <li>{{ .item }}{{ if .note }}, {{ .note }}{{ end }}</li>
+                                    {{ else }}
                                     <li>{{ . }}</li>
+                                    {{ end }}
                                     {{ end }}
                                 </ul>
                             </div>

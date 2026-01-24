@@ -4,7 +4,15 @@
         <div></div>
         <p class="has-text-weight-bold is-size-6">Servings</p>
         <div></div>
+        {{ $servings := .Params.Servings | default 0 }}
+        {{ if $servings }}
+        <div class="recipe-servings" data-base-servings="{{ $servings }}">
+            <input id="servingsInput" class="input is-small" type="number" min="1" step="1" value="{{ $servings }}" aria-label="Servings">
+            <span class="recipe-servings-label">servings</span>
+        </div>
+        {{ else }}
         {{ .Params.Servings | default "---"}} Servings
+        {{ end }}
     </div>
     <div class="column is-half-mobile" style="border-right: 1px solid #dbdbdb">
         <i class="fas fa-hourglass-half fa-lg"></i>

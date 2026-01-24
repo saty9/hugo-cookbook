@@ -15,3 +15,15 @@ li {
 .recipe-steps .recipe-step-text p {
     margin-bottom: 0.5em;
 }
+
+.recipe-servings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.recipe-servings .input {
+    width: 4.5em;
+    text-align: center;
+}

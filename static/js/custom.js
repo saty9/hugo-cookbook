@@ -101,7 +101,7 @@ function populateResults(result){
       return decodeURIComponent((location.search.split(name + '=')[1] || '').split('&')[0]).replace(/\+/g, ' ');
   }
   
-  function render(templateString, data) {
+function render(templateString, data) {
     var conditionalMatches,conditionalPattern,copy;
     conditionalPattern = /\$\{\s*isset ([a-zA-Z]*) \s*\}(.*)\$\{\s*end\s*}/g;
     //since loop below depends on re.lastInxdex, we use a copy to capture any manipulations whilst inside the loop
@@ -125,3 +125,73 @@ function populateResults(result){
     }
     return templateString;
 }
+
+function formatAmount(amount) {
+    if (amount === null || isNaN(amount)) {
+        return "";
+    }
+    var rounded = Math.round(amount * 100) / 100;
+    var text = rounded.toString();
+    return text.replace(/\.?0+$/, "");
+}
+
+function pluralizeUnit(unit, unitPlural, amount) {
+    if (!unit) {
+        return "";
+    }
+    if (amount === 1) {
+        return unit;
+    }
+    if (unitPlural) {
+        return unitPlural;
+    }
+    if (unit.endsWith("s")) {
+        return unit;
+    }
+    return unit + "s";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    var servingsWrap = document.querySelector(".recipe-servings");
+    if (!servingsWrap) {
+        return;
+    }
+
+    var input = servingsWrap.querySelector("#servingsInput");
+    var baseServings = parseFloat(servingsWrap.getAttribute("data-base-servings"));
+    if (!input || isNaN(baseServings) || baseServings <= 0) {
+        return;
+    }
+
+    function updateServings() {
+        var desiredServings = parseFloat(input.value);
+        if (isNaN(desiredServings) || desiredServings <= 0) {
+            return;
+        }
+
+        var scale = desiredServings / baseServings;
+        var amounts = document.querySelectorAll(".recipe-ingredient-amount");
+        amounts.forEach(function (amountNode) {
+            var parent = amountNode.closest(".recipe-ingredient");
+            if (parent && parent.getAttribute("data-scalable") === "false") {
+                return;
+            }
+
+            var baseAmount = parseFloat(amountNode.getAttribute("data-base-amount"));
+            if (isNaN(baseAmount)) {
+                return;
+            }
+
+            var unit = amountNode.getAttribute("data-base-unit") || "";
+            var unitPlural = amountNode.getAttribute("data-base-unit-plural") || "";
+            var scaledAmount = baseAmount * scale;
+            var displayUnit = unit ? pluralizeUnit(unit, unitPlural, scaledAmount) : "";
+            var displayAmount = formatAmount(scaledAmount);
+            amountNode.textContent = displayUnit ? displayAmount + " " + displayUnit : displayAmount;
+        });
+    }
+
+    updateServings();
+    input.addEventListener("input", updateServings);
+    input.addEventListener("change", updateServings);
+});
