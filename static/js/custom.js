@@ -135,6 +135,49 @@ function formatAmount(amount) {
     return text.replace(/\.?0+$/, "");
 }
 
+function toMixedFraction(amount) {
+    var tolerance = 0.02;
+    var rounded = Math.round(amount * 10000) / 10000;
+    var whole = Math.floor(rounded + 1e-9);
+    var frac = rounded - whole;
+    if (frac < tolerance) {
+        return whole.toString();
+    }
+
+    var denominators = [2, 3, 4, 8];
+    var best = null;
+    denominators.forEach(function (den) {
+        var num = Math.round(frac * den);
+        if (num === 0) {
+            return;
+        }
+        var candidate = num / den;
+        var diff = Math.abs(candidate - frac);
+        if (diff <= tolerance && (!best || diff < best.diff)) {
+            best = { num: num, den: den, diff: diff };
+        }
+    });
+
+    if (!best) {
+        return "";
+    }
+
+    var num = best.num;
+    var den = best.den;
+    if (num === den) {
+        whole += 1;
+        num = 0;
+    }
+
+    if (num === 0) {
+        return whole.toString();
+    }
+    if (whole > 0) {
+        return whole + " " + num + "/" + den;
+    }
+    return num + "/" + den;
+}
+
 function pluralizeUnit(unit, unitPlural, amount) {
     if (!unit) {
         return "";
@@ -186,7 +229,8 @@ document.addEventListener("DOMContentLoaded", function () {
             var unitPlural = amountNode.getAttribute("data-base-unit-plural") || "";
             var scaledAmount = baseAmount * scale;
             var displayUnit = unit ? pluralizeUnit(unit, unitPlural, scaledAmount) : "";
-            var displayAmount = formatAmount(scaledAmount);
+            var fractionAmount = toMixedFraction(scaledAmount);
+            var displayAmount = fractionAmount ? fractionAmount : formatAmount(scaledAmount);
             amountNode.textContent = displayUnit ? displayAmount + " " + displayUnit : displayAmount;
         });
     }
