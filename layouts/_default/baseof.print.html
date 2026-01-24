@@ -27,9 +27,44 @@
                     {{ partial "printstatstable.html" . }}
                 </div>
                 <hr style="margin-top: 1em; margin-bottom: .5em;">
+                {{ if .Params.steps }}
+                <div class="content recipe-steps">
+                    <h2>Steps</h2>
+                    {{ range $index, $step := .Params.steps }}
+                    <div class="box recipe-step">
+                        {{ if $step.ingredients }}
+                        <div class="columns">
+                            <div class="column is-one-third">
+                                <h4 class="title is-6">Ingredients</h4>
+                                <ul class="recipe-ingredients">
+                                    {{ range $step.ingredients }}
+                                    <li>{{ . }}</li>
+                                    {{ end }}
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <h4 class="title is-6">Step {{ add $index 1 }}</h4>
+                                <div class="recipe-step-text">
+                                    {{ $step.text | markdownify }}
+                                </div>
+                            </div>
+                        </div>
+                        {{ else }}
+                        <div>
+                            <h4 class="title is-6">Step {{ add $index 1 }}</h4>
+                            <div class="recipe-step-text">
+                                {{ $step.text | markdownify }}
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </div>
+                {{ else }}
                 <div class="content">
                     {{ .Content }}
                 </div>
+                {{ end }}
             </div>
         </div>
     </div>
