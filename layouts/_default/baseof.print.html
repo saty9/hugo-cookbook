@@ -77,6 +77,11 @@
                     </div>
                     {{ end }}
                 </div>
+                {{ if .Content }}
+                <div class="content recipe-notes">
+                    {{ .Content }}
+                </div>
+                {{ end }}
                 {{ else }}
                 <div class="content">
                     {{ .Content }}
