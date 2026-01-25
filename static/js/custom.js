@@ -182,6 +182,9 @@ function pluralizeUnit(unit, unitPlural, amount) {
     if (!unit) {
         return "";
     }
+    if (unit === "g" || unit === "tsp" || unit === "tbsp") {
+        return unit;
+    }
     if (amount === 1) {
         return unit;
     }
