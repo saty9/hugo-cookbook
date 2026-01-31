@@ -49,10 +49,10 @@
                                     {{ $scalable = .scalable }}
                                     {{ end }}
                                     <li class="recipe-ingredient" data-scalable="{{ $scalable }}">
-                                        <span class="recipe-ingredient-amount" data-base-amount="{{ .amount }}" data-base-unit="{{ $unit }}" data-base-unit-plural="{{ $unitPlural }}">{{ .amount }}{{ if $unit }} {{ $unit }}{{ end }}</span>{{ if $item }} <span class="recipe-ingredient-name">{{ $item }}</span>{{ end }}{{ if $note }}<span class="recipe-ingredient-note">, {{ $note }}</span>{{ end }}
+                                        <span class="recipe-ingredient-amount" data-base-amount="{{ .amount }}" data-base-unit="{{ $unit }}" data-base-unit-plural="{{ $unitPlural }}">{{ .amount }}{{ if $unit }} {{ $unit }}{{ end }}</span>{{ if $item }} <span class="recipe-ingredient-name">{{ $item | markdownify }}</span>{{ end }}{{ if $note }}<span class="recipe-ingredient-note">, {{ $note | markdownify }}</span>{{ end }}
                                     </li>
                                     {{ else if and $isMap (isset . "item") }}
-                                    <li>{{ .item }}{{ if .note }}, {{ .note }}{{ end }}</li>
+                                    <li>{{ .item | markdownify }}{{ if .note }}, {{ .note | markdownify }}{{ end }}</li>
                                     {{ else }}
                                     <li>{{ . }}</li>
                                     {{ end }}
