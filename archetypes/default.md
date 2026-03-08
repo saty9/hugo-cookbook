@@ -8,6 +8,7 @@ image_height: {{ .Site.Params.front.defaultImageHeight | default 512 }}
 date: {{ .Date }}
 tags: ["tag1", "tag2"] #tags for your recipe
 tagline: "A short tagline for your recipe"
+source: "" #supports markdown, e.g. "[Recipe Name](https://example.com)"
 servings: 4
 prep_time: 15 #in minutes #can be BLANK
 cook: true # If we are cooking this, leave true, if we are cooling set to false

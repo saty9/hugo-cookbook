@@ -5,3 +5,9 @@
 {{ . }}
 {{ end }}
 {{ end }}
+{{ with .Params.source }}
+<div class="content" style="margin-top: 0.5rem;">
+<strong>Source:</strong>
+{{ . | markdownify }}
+</div>
+{{ end }}
